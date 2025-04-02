@@ -36,7 +36,7 @@ func main() {
 	router.Get("/tasks", func(w http.ResponseWriter, r *http.Request) { task.HandleListTasks(w, r, useCase) })
 	router.Get("/tasks/{id}", func(w http.ResponseWriter, r *http.Request) { task.HandleGetTaskById(w, r, useCase) })
 	router.Put("/tasks/{id}", func(w http.ResponseWriter, r *http.Request) { task.HandleUpdateTask(w, r, useCase) })
-	router.Delete("/tasks{id}", func(w http.ResponseWriter, r *http.Request) { task.HandleDeleteTask(w, r, useCase) })
+	router.Delete("/tasks/{id}", func(w http.ResponseWriter, r *http.Request) { task.HandleDeleteTask(w, r, useCase) })
 
 	fmt.Println("Starting server...")
 

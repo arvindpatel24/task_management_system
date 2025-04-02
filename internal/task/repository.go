@@ -7,7 +7,7 @@ import (
 
 type Repository interface {
 	Create(task Task) (Task, error)
-	GetAll() ([]Task, error)
+	GetAll(page, size int, status string) ([]Task, error)
 	GetByID(id int64) (Task, error)
 	Update(id int64, task Task) (Task, error)
 	Delete(id int64) error
@@ -66,9 +66,19 @@ func (r *taskRepository) Create(task Task) (Task, error) {
 }
 
 // Fetch all tasks from database
-func (r *taskRepository) GetAll() ([]Task, error) {
-	query := "SELECT id, title, description, status, created_at, updated_at FROM " + DB_NAME
-	rows, err := r.db.Query(query)
+func (r *taskRepository) GetAll(page, size int, status string) ([]Task, error) {
+	offset := (page - 1) * size
+	var query string
+	var rows *sql.Rows
+	var err error
+
+	if status == "" {
+		query = "SELECT id, title, description, status, created_at, updated_at FROM " + DB_NAME + " LIMIT ? OFFSET ?"
+		rows, err = r.db.Query(query, size, offset)
+	} else {
+		query = "SELECT id, title, description, status, created_at, updated_at FROM " + DB_NAME + " WHERE status = ? LIMIT ? OFFSET ?"
+		rows, err = r.db.Query(query, status, size, offset)
+	}
 
 	if err != nil {
 		return nil, err

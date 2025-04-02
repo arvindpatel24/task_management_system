@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
+
+	"github.com/arvindpatel24/task_management_system/internal/utility"
 )
 
 func HandleCreateTask(w http.ResponseWriter, r *http.Request, useCase UseCase) {
@@ -25,7 +27,9 @@ func HandleCreateTask(w http.ResponseWriter, r *http.Request, useCase UseCase) {
 
 func HandleListTasks(w http.ResponseWriter, r *http.Request, useCase UseCase) {
 	fmt.Println("List tasks function called.")
-	tasks, err := useCase.GetTasks()
+	page, size := utility.GetPaginationParams(r)
+	status := r.URL.Query().Get("status")
+	tasks, err := useCase.GetTasks(page, size, status)
 	if err != nil {
 		http.Error(w, "Error fetching tasks", http.StatusInternalServerError)
 		return

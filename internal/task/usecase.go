@@ -2,7 +2,7 @@ package task
 
 type UseCase interface {
 	CreateTask(task Task) (Task, error)
-	GetTasks() ([]Task, error)
+	GetTasks(page, size int, status string) ([]Task, error)
 	GetTaskByID(id int64) (Task, error)
 	UpdateTask(id int64, task Task) (Task, error)
 	DeleteTask(id int64) error
@@ -22,8 +22,8 @@ func (u *taskUseCase) CreateTask(task Task) (Task, error) {
 }
 
 // List all tasks
-func (u *taskUseCase) GetTasks() ([]Task, error) {
-	return u.repo.GetAll()
+func (u *taskUseCase) GetTasks(page, size int, status string) ([]Task, error) {
+	return u.repo.GetAll(page, size, status)
 }
 
 // Retrieves a task by its ID
